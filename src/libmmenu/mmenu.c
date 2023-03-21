@@ -431,9 +431,9 @@ MenuReturnStatus ShowMenu(char* rom_path, char* save_path_template, SDL_Surface*
 	
 	Input_reset();
 	
-	int gold_rgb = SDL_MapRGB(screen->format, GOLD_TRIAD);
+	int pink_rgb = SDL_MapRGB(screen->format, PINK_TRIAD);
 	int gray_rgb = SDL_MapRGB(screen->format, DISABLED_TRIAD);
-	SDL_Color gold = (SDL_Color){GOLD_TRIAD};
+	SDL_Color pink = (SDL_Color){PINK_TRIAD};
 	SDL_Color white = (SDL_Color){WHITE_TRIAD};
 	
 	int status = kStatusContinue;
@@ -662,7 +662,7 @@ MenuReturnStatus ShowMenu(char* rom_path, char* save_path_template, SDL_Surface*
 				int disabled = !state_support && (i==kItemSave || i==kItemLoad);
 				int color = disabled ? -1 : 1; // gray or gold
 				if (i==selected) {
-					int bg_color_rgb = disabled ? gray_rgb : gold_rgb;
+					int bg_color_rgb = disabled ? gray_rgb : pink_rgb;
 					SDL_FillRect(screen, &(SDL_Rect){Screen.menu.window.x,Screen.menu.list.y+(i*Screen.menu.list.line_height)-((Screen.menu.list.row_height-Screen.menu.list.line_height)/2),Screen.menu.window.width,Screen.menu.list.row_height}, bg_color_rgb);
 					if (!disabled) color = 0; // white
 				}

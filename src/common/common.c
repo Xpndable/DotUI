@@ -405,7 +405,7 @@ static SDL_Surface* settings_brightness;
 static SDL_Surface* settings_volume;
 static SDL_Surface* settings_mute;
 
-static SDL_Color gold = {GOLD_TRIAD};
+static SDL_Color pink = {PINK_TRIAD};
 static SDL_Color bronze = {BRONZE_TRIAD};
 static SDL_Color white = {WHITE_TRIAD};
 static SDL_Color gray = {GRAY_TRIAD};
@@ -558,7 +558,7 @@ void GFX_blitMenu(SDL_Surface* surface, char* name, char* path, char* unique, in
 		trimSortingMeta(&display_name);
 
 		// bar
-		SDL_FillRect(surface, &(SDL_Rect){0,Screen.main.list.y+(row*Screen.main.list.row_height),Screen.width,Screen.main.list.row_height}, SDL_MapRGB(surface->format, GOLD_TRIAD));
+		SDL_FillRect(surface, &(SDL_Rect){0,Screen.main.list.y+(row*Screen.main.list.row_height),Screen.width,Screen.main.list.row_height}, SDL_MapRGB(surface->format, PINK_TRIAD));
 		
 		// shadow
 		text = TTF_RenderUTF8_Blended(font_l, display_name, shadow50);
@@ -624,7 +624,7 @@ int GFX_scrollMenu(SDL_Surface* surface, char* name, char* path, char* unique, i
 	}
 	
 	// bar
-	SDL_FillRect(surface, &(SDL_Rect){0,Screen.main.list.y+(row*Screen.main.list.row_height),Screen.width,Screen.main.list.row_height}, SDL_MapRGB(surface->format, GOLD_TRIAD));
+	SDL_FillRect(surface, &(SDL_Rect){0,Screen.main.list.y+(row*Screen.main.list.row_height),Screen.width,Screen.main.list.row_height}, SDL_MapRGB(surface->format, PINK_TRIAD));
 	
 	// shadow
 	SDL_BlitSurface(text, &(SDL_Rect){scroll_ox,0,max_width,text->h}, surface, &(SDL_Rect){Screen.main.list.ox+Screen.font.shadow.ox,Screen.main.list.y+(row*Screen.main.list.row_height)+Screen.main.list.oy+Screen.font.shadow.oy});
@@ -686,7 +686,7 @@ void GFX_blitBodyCopy(SDL_Surface* surface, char* str, int ox, int oy, int width
 		
 		
 		if (len) {
-			text = TTF_RenderUTF8_Blended(font_l, line, gold);
+			text = TTF_RenderUTF8_Blended(font_l, line, pink);
 			int x = ox;
 			x += (width - text->w) / 2;
 			SDL_BlitSurface(text, NULL, surface, &(SDL_Rect){x,y});
@@ -706,7 +706,7 @@ int GFX_blitText(SDL_Surface* surface, char* str, int size, int x, int y, int wi
 	
 	TTF_Font* font = size==0?font_s:(size==1?font_m:font_l);
 	int oy = size=0?Screen.font.small_oy:(size==1?Screen.font.medium_oy:Screen.font.large_oy);
-	text = TTF_RenderUTF8_Blended(font, str, has_shadow?shadow_color:(color==-1?disabled:(color?gold:white)));
+	text = TTF_RenderUTF8_Blended(font, str, has_shadow?shadow_color:(color==-1?disabled:(color?pink:white)));
 	int w = text->w;
 	
 	if (width>0) x += (width - w) / 2;
@@ -715,7 +715,7 @@ int GFX_blitText(SDL_Surface* surface, char* str, int size, int x, int y, int wi
 	if (has_shadow) {
 		SDL_BlitSurface(text, NULL, surface, &(SDL_Rect){x+Screen.font.shadow.ox,y+Screen.font.shadow.oy}); 
 		SDL_FreeSurface(text);
-		text = TTF_RenderUTF8_Blended(font, str, color==-1?gray:(color?gold:white));
+		text = TTF_RenderUTF8_Blended(font, str, color==-1?gray:(color?pink:white));
 	}
 	
 	// SDL_FillRect(surface, &(SDL_Rect){x,y,text->w,text->h}, white_rgb); // TODO: tmp
@@ -727,7 +727,7 @@ int GFX_blitText(SDL_Surface* surface, char* str, int size, int x, int y, int wi
 
 SDL_Surface* GFX_getText(char* text, int size, int color) {
 	TTF_Font* font = size==0?font_s:(size==1?font_m:font_l);
-	return TTF_RenderUTF8_Blended(font, text, color?gold:white);
+	return TTF_RenderUTF8_Blended(font, text, color?pink:white);
 }
 
 void GFX_blitBattery(SDL_Surface* surface, int x, int y) {

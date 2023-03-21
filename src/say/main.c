@@ -8,7 +8,7 @@
 #include <sys/mman.h>
 #include <unistd.h>
 
-#define GOLD_TRIAD 0xd2,0xb4,0x6c
+#define PINK_TRIAD 0xd4,0x98,0xab
 #define kTextBoxMaxRows 8
 #define kTextLineLength 256
 #define kLineHeight 48
@@ -64,7 +64,7 @@ int main(int argc , char* argv[]) {
 	
 	int width = 640;
 	int height = 480;
-	SDL_Color gold = {GOLD_TRIAD};
+	SDL_Color pink = {PINK_TRIAD};
 	SDL_Surface* text;
 	char* rows[kTextBoxMaxRows];
 	int row_count = 0;
@@ -94,7 +94,7 @@ int main(int argc , char* argv[]) {
 		}
 		
 		if (len) {
-			text = TTF_RenderUTF8_Blended(font, line, gold);
+			text = TTF_RenderUTF8_Blended(font, line, pink);
 			int x = (width - text->w) / 2;
 			blit(fb0_map,width,height,text->pixels,text->w,text->h,x,y);
 			SDL_FreeSurface(text);
