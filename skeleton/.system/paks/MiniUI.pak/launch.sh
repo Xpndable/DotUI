@@ -43,8 +43,8 @@ fi
 
 lumon & # adjust lcd luma and saturation
 
-CHARGING=`cat /sys/devices/gpiochip0/gpio/gpio59/value`
-if [ "$CHARGING" == "1" ]; then
+CHARGING=`/customer/app/axp_test | awk -F'[,: {}]+' '{print $7}'`
+if [ "$CHARGING" == "3" ]; then
 	batmon
 fi
 

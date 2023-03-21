@@ -25,6 +25,8 @@
 #define	BUTTON_R1		KEY_T
 #define	BUTTON_L2		KEY_TAB
 #define	BUTTON_R2		KEY_BACKSPACE
+#define BUTTON_VOLUP	KEY_VOLUMEUP
+#define BUTTON_VOLDOWN	KEY_VOLUMEDOWN
 
 //	for keyshm
 #define VOLUME		0
@@ -80,74 +82,58 @@ void quit(int exitcode) {
 }
 
 static int isCharging(void) {
-    int i = 0;
-    FILE *file = fopen("/sys/devices/gpiochip0/gpio/gpio59/value", "r");
-    if (file!=NULL) {
-        fscanf(file, "%i", &i);
-        fclose(file);
-    }
-	return i;
+    // Code adapted from OnionOS
+	char *cmd = "cd /customer/app/ ; ./axp_test";  
+	int batJsonSize = 100;
+	char buf[batJsonSize];
+	int charge_number;
+	int result;
+
+	FILE *fp;      
+	fp = popen(cmd, "r");
+	if (fgets(buf, batJsonSize, fp) != NULL) {
+		sscanf(buf,  "{\"battery\":%*d, \"voltage\":%*d, \"charging\":%d}", &charge_number);
+		result = (charge_number==3);
+	}
+	pclose(fp); 
+
+	return result;
 }
 
-static void initADC(void) {
-	sar_fd = open("/dev/sar", O_WRONLY);
-	ioctl(sar_fd, IOCTL_SAR_INIT, NULL);
-}
-static void checkADC(void) {
-	int was_charging = is_charging;
-	is_charging = isCharging();
+void checkAXP() {
+	// Code adapted from OnionOS
+    char *cmd = "cd /customer/app/ ; ./axp_test";  
+    int batJsonSize = 100;
+    char buf[batJsonSize];
+    int battery_number;
 
-	ioctl(sar_fd, IOCTL_SAR_SET_CHANNEL_READ_VALUE, &adc_config);
-	
-	int current_charge = 0;
-	if (adc_config.adc_value>=528) {
-		current_charge = adc_config.adc_value - 478;
-	}
-	else if (adc_config.adc_value>=512){
-		current_charge = adc_config.adc_value * 2.125 - 1068;
-	}
-	else if (adc_config.adc_value>=480){
-		current_charge = adc_config.adc_value * 0.51613 - 243.742;
-	}
-	
-	if (current_charge<0) current_charge = 0;
-	else if (current_charge>100) current_charge = 100;
-	
-	static int first_run = 1;
-	if (first_run || (was_charging && !is_charging)) {
-		first_run = 0;
-		eased_charge = current_charge;
-	}
-	else if (eased_charge<current_charge) {
-		eased_charge += 1;
-		if (eased_charge>100) eased_charge = 100;
-	}
-	else if (eased_charge>current_charge) {
-		eased_charge -= 1;
-		if (eased_charge<0) eased_charge = 0;
-	}
-	
-	// new implementation
-	int bat_fd = open("/tmp/battery", O_CREAT | O_WRONLY | O_TRUNC);
+    FILE *fp;      
+    fp = popen(cmd, "r");
+        if (fgets(buf, batJsonSize, fp) != NULL) {
+           sscanf(buf,  "{\"battery\":%d, \"voltage\":%*d, \"charging\":%*d}", &battery_number);
+        }
+    pclose(fp);
+
+    int bat_fd = open("/tmp/battery", O_CREAT | O_WRONLY | O_TRUNC);
 	if (bat_fd>0) {
 		char value[3];
-		sprintf(value, "%d", eased_charge);
+		sprintf(value, "%d", battery_number);
 		write(bat_fd, value, strlen(value));
 		close(bat_fd);
 	}
 }
-static void* runADC(void *arg) {
+
+static void* runAXP(void *arg) {
 	while(1) {
 		sleep(5);
-		checkADC();
+		checkAXP();
 	}
 	return 0;
 }
 
 int main (int argc, char *argv[]) {
-	initADC();
-	checkADC();
-	pthread_create(&adc_pt, NULL, &runADC, NULL);
+	checkAXP();
+	pthread_create(&adc_pt, NULL, &runAXP, NULL);
 	
 	// Set Initial Volume / Brightness
 	InitSettings();
@@ -170,11 +156,6 @@ int main (int argc, char *argv[]) {
 		case BUTTON_POWER:
 			if ( val != REPEAT ) power_pressed = val;
 			break;
-		case BUTTON_SELECT:
-			if ( val != REPEAT ) {
-				button_flag = button_flag & (~SELECT) | (val<<SELECT_BIT);
-			}
-			break;
 		case BUTTON_START:
 			if ( val != REPEAT ) {
 				button_flag = button_flag & (~START) | (val<<START_BIT);
@@ -191,11 +172,6 @@ int main (int argc, char *argv[]) {
 			}
 			if ( val == PRESSED ) {
 				switch (button_flag) {
-				case SELECT:
-					// SELECT + L : volume down
-					val = GetVolume();
-					if (val>0) SetVolume(--val);
-					break;
 				case START:
 					// START + L : brightness down
 					val = GetBrightness();
@@ -217,11 +193,6 @@ int main (int argc, char *argv[]) {
 			}
 			if ( val == PRESSED ) {
 				switch (button_flag) {
-				case SELECT:
-					// SELECT + R : volume up
-					val = GetVolume();
-					if (val<VOLMAX) SetVolume(++val);
-					break;
 				case START:
 					// START + R : brightness up
 					val = GetBrightness();
@@ -232,13 +203,21 @@ int main (int argc, char *argv[]) {
 				}
 			}
 			break;
+		case BUTTON_VOLUP:
+			val = GetVolume();
+			if (val<VOLMAX) SetVolume(++val);
+			break;
+		case BUTTON_VOLDOWN:
+			val = GetVolume();
+			if (val>0) SetVolume(--val);
+			break;
 		default:
 			break;
 		}
 		
 		if (menu_pressed && power_pressed) {
 			menu_pressed = power_pressed = 0;
-			system("shutdown");
+			system("poweroff");
 			while (1) pause();
 		}
 	}

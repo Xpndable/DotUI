@@ -2,7 +2,7 @@
 
 # {
 	
-DIR=/mnt/SDCARD/miyoo/app
+DIR=/mnt/SDCARD/miyoo354/app
 cd "$DIR"
 
 export LD_LIBRARY_PATH=/lib:/config/lib:/customer/lib
@@ -40,8 +40,8 @@ fi
 
 # then do it
 ./blank
-./say "$VERB MiniUI"
-unzip -o "/mnt/SDCARD/miyoo/app/MiniUI.zip" -d "/mnt/SDCARD"
+./say "$VERB DotUI"
+unzip -o "/mnt/SDCARD/miyoo354/app/MiniUI.zip" -d "/mnt/SDCARD"
 
 # post-install
 POST_INSTALL=/mnt/SDCARD/.system/post-install.sh
@@ -66,7 +66,7 @@ fi
 ./say "$NOUN complete"
 
 rm -rf "$OLD_SYSTEM_PATH"
-rm -rf /mnt/SDCARD/miyoo
+rm -rf /mnt/SDCARD/miyoo354
 
 # } > /mnt/SDCARD/miyoo.txt 2>&1
 

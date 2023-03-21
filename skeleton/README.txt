@@ -1,6 +1,8 @@
-MiniUI is a minimal launcher for the Miyoo Mini
+DotUI is a minimal launcher for the Miyoo Mini Plus, adapted from Shaun Inman's MiniUI
 
-Source: https://github.com/shauninman/MiniUI
+DotUI Source: https://github.com/Xpndable/DotUI
+
+MiniUI Source: https://github.com/shauninman/MiniUI
 
 ----------------------------------------
 Features
@@ -30,14 +32,14 @@ Features
 ----------------------------------------
 Install
 
-MiniUI works on all known versions of the official firmware, no need to upgrade. Save yourself a headache.
+DotUI works on all known versions of the official firmware, no need to upgrade. Save yourself a headache.
 
-Copy the contents of this archive to the root of a fresh FAT32 formatted SD card. Don't forget the "miyoo" folder. Insert your SD card into the device and power it on. MiniUI will install automatically and be ready to go in about 10 seconds.
+Copy the contents of this archive to the root of a fresh FAT32 formatted SD card. Don't forget the "miyoo354" folder. Insert your SD card into the device and power it on. DotUI will install automatically and be ready to go in about 10 seconds.
 
 ----------------------------------------
 Update
 
-To install an update copy just the "miyoo" folder to the root of your SD card. Insert your SD card into the device and power it on. MiniUI will update automatically and be ready to go in about 10 seconds.
+To install an update copy just the "miyoo354" folder to the root of your SD card. Insert your SD card into the device and power it on. DotUI will update automatically and be ready to go in about 10 seconds.
 
 ----------------------------------------
 Shortcuts
@@ -46,7 +48,8 @@ Reduce/increase brightness:
 START + L or R
 
 Reduce/increase volume:
-SELECT + L or R
+Volume Buttons
+(To show volume level, hold SELECT in menus)
 
 Force power off (in case of hangs):
 MENU + POWER
@@ -54,7 +57,7 @@ MENU + POWER
 ----------------------------------------
 Roms
 
-Included in this zip is a Roms folder containing folders for each console MiniUI currently supports. You can rename these folders but you must keep the uppercase tag name in parentheses in order to retain the mapping to the correct emulator (eg. "Nintendo Entertainment System (FC)" could be renamed to "Nintendo (FC)", "NES (FC)", or "Famicom (FC)"). 
+Included in this zip is a Roms folder containing folders for each console DotUI currently supports. You can rename these folders but you must keep the uppercase tag name in parentheses in order to retain the mapping to the correct emulator (eg. "Nintendo Entertainment System (FC)" could be renamed to "Nintendo (FC)", "NES (FC)", or "Famicom (FC)"). 
 
 You should probably preload these folders with roms and copy each one to the Roms folder on your SD card before installing. Or not, I'm not the boss of you.
 
@@ -63,7 +66,7 @@ When one or more folder share the same display name (eg. "Game Boy Advance (GBA)
 ----------------------------------------
 Bios
 
-Some emulators require or perform much better with official bios. MiniUI is strictly BYOB. Place the bios for each system in a folder that matches the tag in the corresponding Roms folder name (eg. bios for "Sony PlayStation (PS)" roms goes in "/Bios/PS/"),
+Some emulators require or perform much better with official bios. DotUI is strictly BYOB. Place the bios for each system in a folder that matches the tag in the corresponding Roms folder name (eg. bios for "Sony PlayStation (PS)" roms goes in "/Bios/PS/"),
 
 Bios file names are case-sensitive:
 
@@ -76,13 +79,13 @@ Bios file names are case-sensitive:
 ----------------------------------------
 Disc-based games
 
-To streamline launching multi-file disc-based games with MiniUI place your bin/cue (and/or iso/wav files) in a folder with the same name as the cue file. MiniUI will automatically launch the cue file instead of navigating into the folder when selected, eg. 
+To streamline launching multi-file disc-based games with DotUI place your bin/cue (and/or iso/wav files) in a folder with the same name as the cue file. DotUI will automatically launch the cue file instead of navigating into the folder when selected, eg. 
 
   Harmful Park (English v1.0)/
     Harmful Park (English v1.0).bin
     Harmful Park (English v1.0).cue
 
-For multi-disc games, put all the files for all the discs in a single folder and create an m3u file (just a text file containing the relative path to each disc's cue file on a separate line) with the same name as the folder. Instead of showing the entire messy contents of the folder, MiniUI will launch the appropriate cue file, eg. For a Policenauts folder structured like this:
+For multi-disc games, put all the files for all the discs in a single folder and create an m3u file (just a text file containing the relative path to each disc's cue file on a separate line) with the same name as the folder. Instead of showing the entire messy contents of the folder, DotUI will launch the appropriate cue file, eg. For a Policenauts folder structured like this:
 
   Policenauts (English v1.0)/
     Policenauts (English v1.0).m3u
@@ -96,7 +99,7 @@ the m3u file would contain just:
   Policenauts (Japan) (Disc 1).cue
   Policenauts (Japan) (Disc 2).cue
 
-MiniUI also reportedly supports chd files and official pbp files (multi-disc pbp files larger than 2GB are not supported).
+DotUI also reportedly supports chd files and official pbp files (multi-disc pbp files larger than 2GB are not supported).
 
 ----------------------------------------
 Collections
@@ -111,12 +114,19 @@ A collection is just a text file containing an ordered list of full paths to rom
 ----------------------------------------
 Advanced
 
-MiniUI can automatically run a user-authored shell script on boot (eg. for starting daemons like screenshots). Just place a file named "auto.sh" to "/.userdata/".
+DotUI can automatically run a user-authored shell script on boot (eg. for starting daemons like screenshots). Just place a file named "auto.sh" to "/.userdata/".
 
-Just keep in mind, syntax errors in auto.sh may prevent MiniUI from launching which will allow the stock system to modify your SD card, polluting the root of the card and your Roms folder with unnecessary subfolders, and removing the hook that allows MiniUI to boot. If this happens you will need to reinstall MiniUI (well, really just its "./tmp_update/" folder). No userdata is lost when this happens, it's just kinda annoying.
+Just keep in mind, syntax errors in auto.sh may prevent DotUI from launching which will allow the stock system to modify your SD card, polluting the root of the card and your Roms folder with unnecessary subfolders, and removing the hook that allows DotUI to boot. If this happens you will need to reinstall DotUI (well, really just its "./tmp_update/" folder). No userdata is lost when this happens, it's just kinda annoying.
 
 ----------------------------------------
-Thanks
+DotUI Thanks
+
+Huge thanks to Shaun Inman from whom this code base is ported for the Miyoo Mini Plus and will be adapted to suit over time. His efforts on MinUI and MiniUI are monumental for the entire community, and we would be poorer without his efforts.
+
+Check out Shaun's repos: https://github.com/shauninman
+
+----------------------------------------
+MiniUI Thanks (from Shaun)
 
 To eggs for his example middleware code, countless bug fixes, neon scalers, and patience in the face of my endless questions.
 

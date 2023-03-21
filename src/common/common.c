@@ -797,7 +797,22 @@ void fauxSleep(void) {
 }
 
 int isCharging(void) {
-	return getInt("/sys/devices/gpiochip0/gpio/gpio59/value");
+	// Code adapted from OnionOS
+	char *cmd = "cd /customer/app/ ; ./axp_test";  
+	int batJsonSize = 100;
+	char buf[batJsonSize];
+	int charge_number;
+	int result;
+
+	FILE *fp;      
+	fp = popen(cmd, "r");
+	if (fgets(buf, batJsonSize, fp) != NULL) {
+		sscanf(buf,  "{\"battery\":%*d, \"voltage\":%*d, \"charging\":%d}", &charge_number);
+		result = (charge_number==3);
+	}
+	pclose(fp);
+	
+	return result;
 }
 
 #define GOVERNOR_PATH "/sys/devices/system/cpu/cpu0/cpufreq/scaling_governor"
@@ -840,7 +855,8 @@ void powerOff(void) {
 		SDL_FillRect(screen, NULL, 0);
 		GFX_blitBodyCopy(screen, msg, 0,0,Screen.width,Screen.height);
 		SDL_Flip(screen);
-		system("shutdown");
+		sleep(1);
+		system("poweroff");
 		while (1) pause();
 	}
 }

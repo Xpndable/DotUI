@@ -22,13 +22,19 @@ void screenOff(void) {
 	screen_on = 0;
 }
 void checkCharging(void) {
-	int i = 0;
-	FILE *file = fopen("/sys/devices/gpiochip0/gpio/gpio59/value", "r");
-	if (file!=NULL) {
-		fscanf(file, "%i", &i);
-		fclose(file);
+	// Code adapted from OnionOS
+	char *cmd = "cd /customer/app/ ; ./axp_test";  
+	int batJsonSize = 100;
+	char buf[batJsonSize];
+	int charge_number;
+
+	FILE *fp;      
+	fp = popen(cmd, "r");
+	if (fgets(buf, batJsonSize, fp) != NULL) {
+		sscanf(buf,  "{\"battery\":%*d, \"voltage\":%*d, \"charging\":%d}", &charge_number);
+		is_charging = (charge_number==3);
 	}
-	is_charging = i;
+	pclose(fp);   
 }
 static pthread_t charging_pt;
 void* chargingThread(void* arg) {
@@ -101,7 +107,7 @@ int main(void) {
 	close(fb0_fd);
 	
 	if (!launch) {
-		system("shutdown");
+		system("poweroff");
 		while (1) pause();
 	}
 	

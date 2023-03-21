@@ -19,7 +19,7 @@ BUILD_REPO=https://github.com/shauninman/MiniUI
 BUILD_GCC:=$(shell $(CROSS_COMPILE)gcc -dumpfullversion -dumpversion)
 
 RELEASE_TIME!=date +%Y%m%d
-RELEASE_BASE=MiniUI-$(RELEASE_TIME)
+RELEASE_BASE=DotUI-$(RELEASE_TIME)
 RELEASE_DOT!=find ./releases/. -regex ".*/$(RELEASE_BASE)-[0-9]+-base\.zip" -printf '.' | wc -m
 RELEASE_NAME=$(RELEASE_BASE)-$(RELEASE_DOT)
 
@@ -55,7 +55,7 @@ core:
 
 emu:
 	cd ./third-party/picoarch && make platform=miyoomini -j
-	cd ./third-party/vvvvvv && make -j
+	# cd ./third-party/vvvvvv && make -j
 	./bits/commits.sh > ./commits.txt
 
 tools:
@@ -75,7 +75,7 @@ payload:
 	mkdir -p ./build
 	cp -R ./skeleton/. ./build/PAYLOAD
 	cp -R ./extras/. ./build/EXTRAS
-	mv ./build/PAYLOAD/miyoo/app/keymon.sh ./build/PAYLOAD/miyoo/app/keymon
+	mv ./build/PAYLOAD/miyoo354/app/keymon.sh ./build/PAYLOAD/miyoo354/app/keymon
 	cd ./build && find . -type f -name '.keep' -delete
 	cd ./build && find . -type f -name '.DS_Store' -delete
 	cp ./src/libmsettings/libmsettings.so ./build/PAYLOAD/.system/lib/
@@ -93,8 +93,8 @@ payload:
 	cp ./src/confirm/confirm ./build/PAYLOAD/.system/bin/
 	cp ./src/say/say ./build/PAYLOAD/.system/bin/
 	cp ./src/blank/blank ./build/PAYLOAD/.system/bin/
-	cp ./src/say/say ./build/PAYLOAD/miyoo/app/
-	cp ./src/blank/blank ./build/PAYLOAD/miyoo/app/
+	cp ./src/say/say ./build/PAYLOAD/miyoo354/app/
+	cp ./src/blank/blank ./build/PAYLOAD/miyoo354/app/
 	cp ./third-party/picoarch/output/picoarch ./build/PAYLOAD/.system/bin/
 	cp ./third-party/picoarch/output/fceumm_libretro.so ./build/PAYLOAD/.system/cores/
 	cp ./third-party/picoarch/output/gambatte_libretro.so ./build/PAYLOAD/.system/cores/
@@ -113,7 +113,7 @@ payload:
 	cp ./third-party/picoarch/output/mgba_libretro.so ./build/EXTRAS/Emus/SGB.pak/
 	cp ./third-party/picoarch/output/fake-08_libretro.so ./build/EXTRAS/Emus/P8.pak/
 	cp ./third-party/picoarch/output/nxengine_libretro.so "./build/EXTRAS/Roms/Native Games (SH)/Cave Story/"
-	cp ./third-party/vvvvvv/vvvvvv "./build/EXTRAS/Roms/Native Games (SH)/VVVVVV/"
+	# cp ./third-party/vvvvvv/vvvvvv "./build/EXTRAS/Roms/Native Games (SH)/VVVVVV/"
 	# cp -R ./bits/bootlogos/pak/. ./build/EXTRAS/Tools/Single-use/bootlogo.tmp
 	# cp ./third-party/logotweak/logomake/logomake ./build/EXTRAS/Tools/Single-use/bootlogo.tmp/
 	# cp ./third-party/logotweak/logowrite/logowrite ./build/EXTRAS/Tools/Single-use/bootlogo.tmp/
@@ -139,8 +139,8 @@ zip:
 	cd ./build/PAYLOAD/.system/paks/MiniUI.pak && echo "$(RELEASE_NAME)-base.zip\n$(BUILD_HASH)" > version.txt
 	cp ./commits.txt ./build/PAYLOAD/.system/paks/MiniUI.pak
 	cd ./build/PAYLOAD && zip -r MiniUI.zip .system .tmp_update
-	mv ./build/PAYLOAD/MiniUI.zip ./build/PAYLOAD/miyoo/app/
-	cd ./build/PAYLOAD && zip -r ../../releases/$(RELEASE_NAME)-base.zip Bios Roms Saves miyoo README.txt
+	mv ./build/PAYLOAD/MiniUI.zip ./build/PAYLOAD/miyoo354/app/
+	cd ./build/PAYLOAD && zip -r ../../releases/$(RELEASE_NAME)-base.zip Bios Roms Saves miyoo354 README.txt
 	cd ./build/EXTRAS && zip -r ../../releases/$(RELEASE_NAME)-extras.zip Bios Emus Roms Saves Tools README.txt
 	echo "$(RELEASE_NAME)" > ./build/latest.txt
 
