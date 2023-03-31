@@ -1514,26 +1514,25 @@ int main (int argc, char *argv[]) {
 			}
 
 			GFX_blitRule(screen, Screen.main.rule.bottom_y);
-			GFX_blitPill(screen, HINT_SLEEP, "SLEEP", Screen.buttons.left, Screen.buttons.top);
 
 			if (show_version) {
-				GFX_blitButton(screen, "B", "BACK", -Screen.buttons.right, Screen.buttons.top, Screen.button.text.ox_B);
+				GFX_blitButton(screen, "B", "BACK", Screen.buttons.left, Screen.buttons.top, Screen.button.text.ox_B);
 			}
 			else if (total==0) {
 				if (stack->count>1) {
-					GFX_blitButton(screen, "B", "BACK", -Screen.buttons.right, Screen.buttons.top, Screen.button.text.ox_B);
+					GFX_blitButton(screen, "B", "BACK", Screen.buttons.left, Screen.buttons.top, Screen.button.text.ox_B);
 				}
 			}
 			else {
 				int button_width;
 				if (can_resume) {
-					button_width = GFX_blitButton(screen, "A", "RESUME", -Screen.buttons.right, Screen.buttons.top, Screen.button.text.ox_A);
+					button_width = GFX_blitButton(screen, "A", "CONTINUE", -Screen.buttons.right, Screen.buttons.top, Screen.button.text.ox_A);
 				}
 				else {
 					button_width = GFX_blitButton(screen, "A", "START", -Screen.buttons.right, Screen.buttons.top, Screen.button.text.ox_A);
 				}
 				if (stack->count>1) {
-					GFX_blitButton(screen, "B", "BACK", -(Screen.buttons.right+button_width+Screen.buttons.gutter),Screen.buttons.top, Screen.button.text.ox_B);
+					GFX_blitButton(screen, "B", "BACK", Screen.buttons.left, Screen.buttons.top, Screen.button.text.ox_B);
 				}
 			}
 		}

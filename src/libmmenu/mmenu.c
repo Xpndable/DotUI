@@ -47,7 +47,7 @@ __attribute__((constructor)) static void init(void) {
 	items[kItemSave] 		= "Save";
 	items[kItemLoad] 		= "Load";
 	items[kItemAdvanced] 	= is_simple ? "Reset" : "Advanced";
-	items[kItemExitGame] 	= "Save & Quit";
+	items[kItemExitGame] 	= "Quit";
 	
 	GFX_init();
 	
@@ -246,7 +246,7 @@ static MenuReturnStatus SaveLoad(char* rom_path, char* save_path_template, SDL_S
 	// m3u path may change rom_file
 	sprintf(slot_path, "%s/%s.txt", mmenu_dir, rom_file);
 	if (exists(slot_path)) slot = getInt(slot_path);
-	if (slot==8) slot = 0;
+	if (slot==8 || slot==9) slot = 0;
 	
 	if (requested_state==kRequestSave) {
 		if (!optional_snapshot) optional_snapshot = SDL_GetVideoSurface();
@@ -439,7 +439,7 @@ MenuReturnStatus ShowMenu(char* rom_path, char* save_path_template, SDL_Surface*
 	int status = kStatusContinue;
 	int selected = 0; // resets every launch
 	if (exists(slot_path)) slot = getInt(slot_path);
-	if (slot==8) slot = 0;
+	if (slot==8 || slot==9) slot = 0;
 	
 	// inline functions? okay.
 	void SystemRequest(MenuRequestState request) {
@@ -531,6 +531,15 @@ MenuReturnStatus ShowMenu(char* rom_path, char* save_path_template, SDL_Surface*
 		if (Input_justPressed(kButtonB) || Input_justPressed(kButtonMenu)) {
 			status = kStatusContinue;
 			quit = 1;
+		}
+		else if (Input_justPressed(kButtonX)) {
+			switch (selected) {
+				case kItemExitGame:
+				status = kStatusResetGame;
+				quit = 1;
+				break;
+			}
+			if (quit) break;
 		}
 		else if (Input_justPressed(kButtonA)) {
 			switch(selected) {
@@ -719,11 +728,30 @@ MenuReturnStatus ShowMenu(char* rom_path, char* save_path_template, SDL_Surface*
 				SDL_BlitSurface(slot_dot_selected, NULL, screen, &(SDL_Rect){Screen.menu.slots.x+(Screen.menu.slots.ox*slot),Screen.menu.slots.y});
 			}
 			
-			GFX_blitPill(screen, HINT_SLEEP, "SLEEP", Screen.buttons.left, Screen.menu.buttons.top);
-			// TODO: change ACT to OKAY?
-			int button_width = GFX_blitButton(screen, "A", "ACT", -Screen.buttons.right, Screen.menu.buttons.top, Screen.button.text.ox_A);
-			GFX_blitButton(screen, "B", "BACK", -(Screen.buttons.right+button_width+Screen.buttons.gutter),Screen.menu.buttons.top, Screen.button.text.ox_B);
-			// TODO: /can this be cached?
+			int button_width;
+			GFX_blitButton(screen, "B", "BACK", Screen.buttons.left, Screen.menu.buttons.top, Screen.button.text.ox_B);
+			switch (selected) {
+				case kItemContinue:
+					GFX_blitButton(screen, "A", "CONTINUE", -Screen.buttons.right, Screen.menu.buttons.top, Screen.button.text.ox_A);
+					break;
+				case kItemSave:
+					GFX_blitButton(screen, "A", "SAVE", -Screen.buttons.right, Screen.menu.buttons.top, Screen.button.text.ox_A);
+					break;
+				case kItemLoad:
+					GFX_blitButton(screen, "A", "LOAD", -Screen.buttons.right, Screen.menu.buttons.top, Screen.button.text.ox_A);
+					break;
+				case kItemAdvanced:
+					GFX_blitButton(screen, "A", "ADVANCED", -Screen.buttons.right, Screen.menu.buttons.top, Screen.button.text.ox_A);
+					break;
+				case kItemExitGame:
+					if (state_support) {
+						button_width = GFX_blitButton(screen, "A", "SAVE & QUIT", -Screen.buttons.right, Screen.menu.buttons.top, Screen.button.text.ox_A);
+					} else {
+						button_width = GFX_blitButton(screen, "A", "QUIT", -Screen.buttons.right, Screen.menu.buttons.top, Screen.button.text.ox_A);
+					}
+					GFX_blitButton(screen, HINT_RESET, "RESTART", -(Screen.buttons.right+button_width+Screen.buttons.gutter), Screen.menu.buttons.top, Screen.button.text.ox_X);
+					break;
+			}
 			
 			SDL_Flip(screen);
 		}
