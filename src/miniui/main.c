@@ -363,7 +363,6 @@ static Array* recents; // RecentArray
 static int is_simple = 0;
 static int quit = 0;
 static int can_resume = 0;
-static int should_resume = 0; // set to 1 on kButtonResume but only if can_resume==1
 static char slot_path[256];
 
 static int restore_depth = -1;
@@ -1027,11 +1026,10 @@ static void openRom(char* path, char* last) {
 	char emu_name[256];
 	getEmuName(sd_path, emu_name);
 
-	if (should_resume) {
+	if (can_resume) {
 		char slot[16];
 		getFile(slot_path, slot, 16);
 		putFile(kResumeSlotPath, slot);
-		should_resume = 0;
 
 		if (has_m3u) {
 			char rom_file[256];
@@ -1054,7 +1052,7 @@ static void openRom(char* path, char* last) {
 			}
 		}
 	}
-	else putInt(kResumeSlotPath,8); // resume hidden default state
+	else putInt(kResumeSlotPath, 9); // resume hidden default state
 	
 	char emu_path[256];
 	getEmuPath(emu_name, emu_path);
@@ -1380,18 +1378,10 @@ int main (int argc, char *argv[]) {
 		
 			if (dirty && total>0) readyResume(top->entries->items[top->selected]);
 
-			if (total>0 && Input_justReleased(kButtonResume)) {
-				if (can_resume) {
-					should_resume = 1;
-					Entry_open(top->entries->items[top->selected]);
-					dirty = 1;
-				}
-			}
-			else if (total>0 && Input_justPressed(kButtonA)) {
+			if (total > 0 && Input_justPressed(kButtonA)) {
 				Entry_open(top->entries->items[top->selected]);
 				total = top->entries->count;
 				dirty = 1;
-	
 				if (total>0) readyResume(top->entries->items[top->selected]);
 			}
 			else if (Input_justPressed(kButtonB) && stack->count>1) {
@@ -1522,16 +1512,10 @@ int main (int argc, char *argv[]) {
 					GFX_blitBodyCopy(screen, "Empty folder", 0,0,Screen.width,Screen.height);
 				}
 			}
-		
+
 			GFX_blitRule(screen, Screen.main.rule.bottom_y);
-			if (can_resume && !show_version) {
-				if (strlen(HINT_RESUME)>1) GFX_blitPill(screen, HINT_RESUME, "RESUME", Screen.buttons.left, Screen.buttons.top);
-				else GFX_blitButton(screen, HINT_RESUME, "RESUME", Screen.buttons.left, Screen.buttons.top, Screen.button.text.ox_X);
-			}
-			else {
-				GFX_blitPill(screen, HINT_SLEEP, "SLEEP", Screen.buttons.left, Screen.buttons.top);
-			}
-			
+			GFX_blitPill(screen, HINT_SLEEP, "SLEEP", Screen.buttons.left, Screen.buttons.top);
+
 			if (show_version) {
 				GFX_blitButton(screen, "B", "BACK", -Screen.buttons.right, Screen.buttons.top, Screen.button.text.ox_B);
 			}
@@ -1541,7 +1525,13 @@ int main (int argc, char *argv[]) {
 				}
 			}
 			else {
-				int button_width = GFX_blitButton(screen, "A", "OPEN", -Screen.buttons.right, Screen.buttons.top, Screen.button.text.ox_A);
+				int button_width;
+				if (can_resume) {
+					button_width = GFX_blitButton(screen, "A", "RESUME", -Screen.buttons.right, Screen.buttons.top, Screen.button.text.ox_A);
+				}
+				else {
+					button_width = GFX_blitButton(screen, "A", "START", -Screen.buttons.right, Screen.buttons.top, Screen.button.text.ox_A);
+				}
 				if (stack->count>1) {
 					GFX_blitButton(screen, "B", "BACK", -(Screen.buttons.right+button_width+Screen.buttons.gutter),Screen.buttons.top, Screen.button.text.ox_B);
 				}

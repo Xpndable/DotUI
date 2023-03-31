@@ -47,7 +47,7 @@ __attribute__((constructor)) static void init(void) {
 	items[kItemSave] 		= "Save";
 	items[kItemLoad] 		= "Load";
 	items[kItemAdvanced] 	= is_simple ? "Reset" : "Advanced";
-	items[kItemExitGame] 	= "Quit";
+	items[kItemExitGame] 	= "Save & Quit";
 	
 	GFX_init();
 	
@@ -587,6 +587,11 @@ MenuReturnStatus ShowMenu(char* rom_path, char* save_path_template, SDL_Surface*
 				break;
 				case kItemExitGame:
 					status = kStatusExitGame;
+					if (total_discs) {
+						char* disc_path = disc_paths[disc];
+						putFile(txt_path, disc_path + strlen(base_path));
+					}
+					putInt(slot_path, 9);
 					quit = 1;
 				break;
 			}

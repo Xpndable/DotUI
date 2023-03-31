@@ -12,7 +12,7 @@
 #define MAX_BRIGHTNESS 10
 
 #define HINT_SLEEP "POWER"
-#define HINT_RESUME "X"
+#define HINT_RESET "X"
 
 #define SDLK_UNDEFINED -1
 
@@ -71,7 +71,6 @@ typedef enum ButtonIndex {
 // TODO: considering moving resume to START on all platforms?
 // but then we need to extend the can_start and can_select behavior too...
 #define kButtonSleep kButtonPower
-#define kButtonResume kButtonX
 #define kButtonAltEmu kButtonY
 
 typedef struct UnionPaths {
