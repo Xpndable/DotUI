@@ -145,7 +145,7 @@ int main (int argc, char *argv[]) {
 	register uint32_t button_flag = 0;
 	register uint32_t menu_pressed = 0;
 	register uint32_t power_pressed = 0;
-	uint32_t repeat_LR = 0;
+	uint32_t repeat_vol = 0;
 	while( read(input_fd, &ev, sizeof(ev)) == sizeof(ev) ) {
 		val = ev.value;
 		if (( ev.type != EV_KEY ) || ( val > REPEAT )) continue;
@@ -161,55 +161,41 @@ int main (int argc, char *argv[]) {
 				button_flag = button_flag & (~START) | (val<<START_BIT);
 			} 
 			break;
-		case BUTTON_L1:
-		case BUTTON_L2:
+		case BUTTON_VOLUP:
 			if ( val == REPEAT ) {
 				// Adjust repeat speed to 1/2
-				val = repeat_LR;
-				repeat_LR ^= PRESSED;
+				val = repeat_vol;
+				repeat_vol ^= PRESSED;
 			} else {
-				repeat_LR = 0;
+				repeat_vol = 0;
 			}
 			if ( val == PRESSED ) {
-				switch (button_flag) {
-				case START:
-					// START + L : brightness down
-					val = GetBrightness();
-					if (val>0) SetBrightness(--val);
-					break;
-				default:
-					break;
-				}
-			}
-			break;
-		case BUTTON_R1:
-		case BUTTON_R2:
-			if ( val == REPEAT ) {
-				// Adjust repeat speed to 1/2
-				val = repeat_LR;
-				repeat_LR ^= PRESSED;
-			} else {
-				repeat_LR = 0;
-			}
-			if ( val == PRESSED ) {
-				switch (button_flag) {
-				case START:
-					// START + R : brightness up
+				if (menu_pressed > 0) {
 					val = GetBrightness();
 					if (val<BRIMAX) SetBrightness(++val);
-					break;
-				default:
-					break;
+				} else {
+					val = GetVolume();
+					if (val<VOLMAX) SetVolume(++val);
 				}
 			}
 			break;
-		case BUTTON_VOLUP:
-			val = GetVolume();
-			if (val<VOLMAX) SetVolume(++val);
-			break;
 		case BUTTON_VOLDOWN:
-			val = GetVolume();
-			if (val>0) SetVolume(--val);
+			if ( val == REPEAT ) {
+				// Adjust repeat speed to 1/2
+				val = repeat_vol;
+				repeat_vol ^= PRESSED;
+			} else {
+				repeat_vol = 0;
+			}
+			if ( val == PRESSED ) {
+				if (menu_pressed > 0) {
+					val = GetBrightness();
+					if (val>0) SetBrightness(--val);
+				} else {
+					val = GetVolume();
+					if (val>0) SetVolume(--val);
+				}
+			}
 			break;
 		default:
 			break;

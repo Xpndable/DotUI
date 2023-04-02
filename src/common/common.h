@@ -35,6 +35,8 @@
 #define MINUI_L3 		SDLK_UNDEFINED
 #define MINUI_R3 		SDLK_UNDEFINED
 #define MINUI_POWER 	SDLK_POWER
+#define MINUI_VOLDN		SDLK_LSUPER
+#define MINUI_VOLUP		SDLK_RSUPER
 
 #define PINK_TRIAD 0xd4,0x98,0xab
 #define BRONZE_TRIAD 0xa1,0x74,0x82
@@ -64,6 +66,8 @@ typedef enum ButtonIndex {
 	kButtonL3,
 	kButtonR3,
 	kButtonPower,
+	kButtonVolDn,
+	kButtonVolUp,
 	kButtonCount,
 } ButtonIndex;
 

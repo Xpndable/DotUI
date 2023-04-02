@@ -234,6 +234,8 @@ void Input_poll(void) {
 			else if (key==MINUI_L3)		i = kButtonL3;
 			else if (key==MINUI_R3)		i = kButtonR3;
 			else if (key==MINUI_POWER)	i = kButtonPower;
+			else if (key==MINUI_VOLDN)	i = kButtonVolDn;
+			else if (key==MINUI_VOLUP)	i = kButtonVolUp;
 			else continue;
 			
 			if (event.type==SDL_KEYDOWN) {

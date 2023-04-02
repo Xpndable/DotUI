@@ -1265,8 +1265,7 @@ int main (int argc, char *argv[]) {
 	int setting_value = 0;
 	int setting_min = 0;
 	int setting_max = 0;
-	int delay_start = 0;
-	int delay_select = 0;
+	unsigned long setting_start = 0;
 	unsigned long cancel_start = SDL_GetTicks();
 	unsigned long power_start = 0;
 	while (!quit) {
@@ -1278,13 +1277,13 @@ int main (int argc, char *argv[]) {
 		int total = top->entries->count;
 		
 		if (show_version) {
-			if (Input_justPressed(kButtonB) || Input_justPressed(kButtonMenu)) {
+			if ((Input_justPressed(kButtonB) || Input_justReleased(kButtonMenu)) && show_setting == 0) {
 				show_version = 0;
 				dirty = 1;
 			}
 		}
 		else {
-			if (!is_simple && Input_justPressed(kButtonMenu)) {
+			if (!is_simple && Input_justReleased(kButtonMenu) && show_setting == 0) {
 				show_version = 1;
 				dirty = 1;
 			}
@@ -1443,20 +1442,34 @@ int main (int argc, char *argv[]) {
 		if (Input_isPressed(kButtonStart) && Input_isPressed(kButtonSelect)) {
 			// buh
 		}
-		else if (Input_isPressed(kButtonStart) && !delay_start) {
+		else if (Input_isPressed(kButtonMenu) && (Input_isPressed(kButtonVolDn) || Input_isPressed(kButtonVolUp))) {
 			show_setting = 1;
 			setting_value = GetBrightness();
 			setting_min = MIN_BRIGHTNESS;
 			setting_max = MAX_BRIGHTNESS;
 		}
-		else if (Input_isPressed(kButtonSelect) && !delay_select) {
+		else if (Input_isPressed(kButtonMenu) && old_setting == 1) {
+			show_setting = 1;
+			setting_value = GetBrightness();
+			setting_min = MIN_BRIGHTNESS;
+			setting_max = MAX_BRIGHTNESS;
+		}
+		else if (Input_isPressed(kButtonVolDn) || Input_isPressed(kButtonVolUp)) {
 			show_setting = 2;
 			setting_value = GetVolume();
 			setting_min = MIN_VOLUME;
 			setting_max = MAX_VOLUME;
 		}
-		if (old_setting!=show_setting || old_value!=setting_value) dirty = 1;
-		
+
+		if (old_setting && !show_setting) setting_start = SDL_GetTicks();
+
+		if (old_value != setting_value) dirty = 1;
+		else if (!old_setting && show_setting) dirty = 1;
+		else if (setting_start > 0 && SDL_GetTicks() - setting_start > 500) {
+			dirty = 1;
+			setting_start = 0;
+		}
+
 		if (dirty) {
 			SDL_FillRect(screen, NULL, 0);
 			SDL_BlitSurface(logo, NULL, screen, &(SDL_Rect){Screen.main.logo.x,Screen.main.logo.y});

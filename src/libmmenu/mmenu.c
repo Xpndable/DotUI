@@ -470,6 +470,7 @@ MenuReturnStatus ShowMenu(char* rom_path, char* save_path_template, SDL_Surface*
 	int setting_value = 0;
 	int setting_min = 0;
 	int setting_max = 0;
+	unsigned long setting_start = 0;
 	unsigned long cancel_start = SDL_GetTicks();
 	int was_charging = isCharging();
 	unsigned long charge_start = SDL_GetTicks();
@@ -528,7 +529,7 @@ MenuReturnStatus ShowMenu(char* rom_path, char* save_path_template, SDL_Surface*
 			// printf("bmp_path: %s (%i)\n", bmp_path, preview_exists);
 		}
 		
-		if (Input_justPressed(kButtonB) || Input_justPressed(kButtonMenu)) {
+		if ((Input_justPressed(kButtonB) || Input_justReleased(kButtonMenu)) && !dirty && show_setting == 0) {
 			status = kStatusContinue;
 			quit = 1;
 		}
@@ -632,19 +633,33 @@ MenuReturnStatus ShowMenu(char* rom_path, char* save_path_template, SDL_Surface*
 		if (Input_isPressed(kButtonStart) && Input_isPressed(kButtonSelect)) {
 			// buh
 		}
-		else if (Input_isPressed(kButtonStart)) {
+		else if (Input_isPressed(kButtonMenu) && (Input_isPressed(kButtonVolDn) || Input_isPressed(kButtonVolUp))) {
 			show_setting = 1;
 			setting_value = GetBrightness();
 			setting_min = MIN_BRIGHTNESS;
 			setting_max = MAX_BRIGHTNESS;
 		}
-		else if (Input_isPressed(kButtonSelect)) {
+		else if (Input_isPressed(kButtonMenu) && old_setting == 1) {
+			show_setting = 1;
+			setting_value = GetBrightness();
+			setting_min = MIN_BRIGHTNESS;
+			setting_max = MAX_BRIGHTNESS;
+		}
+		else if (Input_isPressed(kButtonVolDn) || Input_isPressed(kButtonVolUp)) {
 			show_setting = 2;
 			setting_value = GetVolume();
 			setting_min = MIN_VOLUME;
 			setting_max = MAX_VOLUME;
 		}
-		if (old_setting!=show_setting || old_value!=setting_value) dirty = 1;
+
+		if (old_setting && !show_setting) setting_start = SDL_GetTicks();
+
+		if (old_value != setting_value) dirty = 1;
+		else if (!old_setting && show_setting) dirty = 1;
+		else if (setting_start > 0 && SDL_GetTicks() - setting_start > 500) {
+			dirty = 1;
+			setting_start = 0;
+		}
 		
 		if (dirty) {
 			dirty = 0;
