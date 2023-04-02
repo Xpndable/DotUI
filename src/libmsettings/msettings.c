@@ -7,6 +7,7 @@
 #include <sys/stat.h>
 #include <dlfcn.h>
 #include <string.h>
+#include <math.h>
 
 #include <mi_ao.h>
 
@@ -85,7 +86,11 @@ int GetBrightness(void) { // 0-10
 	return settings->brightness;
 }
 void SetBrightness(int value) {
-	SetRawBrightness(value==0?6:value*10);
+	if (value > 2) {
+		SetRawBrightness(pow(value,2));
+	} else {
+		SetRawBrightness(3+(value*2));
+	}
 	settings->brightness = value;
 	SaveSettings();
 }
