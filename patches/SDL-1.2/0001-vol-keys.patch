@@ -1,0 +1,34 @@
+diff --git a/src/video/fbcon/SDL_fbevents.c b/src/video/fbcon/SDL_fbevents.c
+index 71b25791..dcfac313 100644
+--- a/src/video/fbcon/SDL_fbevents.c
++++ b/src/video/fbcon/SDL_fbevents.c
+@@ -1107,12 +1107,12 @@ void FB_InitOSKeymap(_THIS)
+ 	  case SCANCODE_RIGHTCONTROL:
+ 	    keymap[i] = SDLK_RCTRL;
+ 	    break;
+-	  case SCANCODE_RIGHTWIN:
+-	    keymap[i] = SDLK_RSUPER;
+-	    break;
+-	  case SCANCODE_LEFTWIN:
++	  case SCANCODE_VOLUMEDOWN:
+ 	    keymap[i] = SDLK_LSUPER;
+ 	    break;
++	  case SCANCODE_VOLUMEUP:
++	    keymap[i] = SDLK_RSUPER;
++	    break;
+ 	  case SCANCODE_LEFTALT:
+ 	    keymap[i] = SDLK_LALT;
+ 	    break;
+diff --git a/src/video/fbcon/SDL_fbkeys.h b/src/video/fbcon/SDL_fbkeys.h
+index 3c4dec2f..84524be5 100644
+--- a/src/video/fbcon/SDL_fbkeys.h
++++ b/src/video/fbcon/SDL_fbkeys.h
+@@ -133,6 +133,8 @@
+ #define SCANCODE_PAGEDOWN		109
+ #define SCANCODE_INSERT			110
+ #define SCANCODE_REMOVE			111
++#define SCANCODE_VOLUMEDOWN   114
++#define SCANCODE_VOLUMEUP     115
+ #define SCANCODE_POWER			116
+ 
+ #define SCANCODE_RIGHTWIN		126
