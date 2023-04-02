@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # install
-if [ -d "/mnt/SDCARD/miyoo" ] ; then
+if [ -d "/mnt/SDCARD/miyoo354" ] ; then
 	exit 0
 fi
 
