@@ -107,7 +107,7 @@ int main(void) {
 	close(fb0_fd);
 	
 	if (!launch) {
-		system("poweroff");
+		system("shutdown");
 		while (1) pause();
 	}
 	
