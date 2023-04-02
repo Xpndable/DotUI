@@ -76,6 +76,10 @@ touch "$EXEC_PATH"  && sync
 MIYOO_VERSION=`/etc/fw_printenv miyoo_version`
 export MIYOO_VERSION=${MIYOO_VERSION#miyoo_version=}
 
+# Battery level debug info
+ls /customer/app > "$USERDATA_PATH/.miniui/app_contents.txt"
+/customer/app/axp_test > "$USERDATA_PATH/.miniui/axp_result.txt"
+
 CPU_PATH=/sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
 while [ -f "$EXEC_PATH" ]; do
 	echo ondemand > "$CPU_PATH"
