@@ -821,7 +821,8 @@ int isCharging(void) {
 static char governor[128];
 
 void enterSleep(void) {
-	SetRawVolume(-60);
+	//SetRawVolume(-60);
+	SetMute(1);
 	// SetRawBrightness(0);
 	putInt("/sys/class/gpio/export", 4);
 	putFile("/sys/class/gpio/gpio4/direction", "out");
@@ -841,6 +842,7 @@ void exitSleep(void) {
 	putInt("/sys/class/pwm/pwmchip0/pwm0/enable",0);
 	putInt("/sys/class/pwm/pwmchip0/pwm0/enable",1);
 	// SetBrightness(GetBrightness());
+	SetMute(0);
 	SetVolume(GetVolume());
 	
 	// restore previous governor

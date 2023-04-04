@@ -176,6 +176,7 @@ int main (int argc, char *argv[]) {
 				} else {
 					val = GetVolume();
 					if (val<VOLMAX) SetVolume(++val);
+					if (val>0) SetMute(0);
 				}
 			}
 			break;
@@ -194,6 +195,7 @@ int main (int argc, char *argv[]) {
 				} else {
 					val = GetVolume();
 					if (val>0) SetVolume(--val);
+					if (val==0) SetMute(1);
 				}
 			}
 			break;

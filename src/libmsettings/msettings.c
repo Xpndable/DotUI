@@ -11,6 +11,9 @@
 
 #include <mi_ao.h>
 
+#include <stdint.h>
+#include <sys/ioctl.h>
+
 #include "msettings.h"
 
 ///////////////////////////////////////
@@ -30,6 +33,7 @@ static Settings DefaultSettings = {
 static Settings* settings;
 
 #define SHM_KEY "/SharedSettings"
+#define MI_AO_SETMUTE 0x4008690d
 static char SettingsPath[256];
 static int shm_fd = -1;
 static int is_host = 0;
@@ -67,6 +71,8 @@ void InitSettings(void) {
 	MI_AO_Enable(0);
 	MI_AO_EnableChn(0,0);
 	SetVolume(GetVolume());
+	if (GetVolume()==0) SetMute(1);
+	else SetMute(0);
 	SetBrightness(GetBrightness());
 }
 void QuitSettings(void) {
@@ -114,6 +120,17 @@ void SetRawBrightness(int val) {
 }
 void SetRawVolume(int val) {
 	MI_AO_SetVolume(0,val);
+}
+
+void SetMute(int mute) {
+    int fd = open("/dev/mi_ao", O_RDWR);
+    if (fd >= 0) {
+        int buf2[] = {0, mute};
+        uint64_t buf1[] = {sizeof(buf2), (uintptr_t)buf2};
+
+        ioctl(fd, MI_AO_SETMUTE, buf1);
+        close(fd);
+    }
 }
 
 int GetJack(void) {
