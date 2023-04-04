@@ -64,7 +64,7 @@ core:
 
 emu:
 	cd ./third-party/picoarch && make platform=miyoomini -j
-	# cd ./third-party/vvvvvv && make -j
+	cd ./third-party/vvvvvv && make -j
 	./bits/commits.sh > ./commits.txt
 
 tools:
@@ -122,7 +122,7 @@ payload:
 	cp ./third-party/picoarch/output/mgba_libretro.so ./build/EXTRAS/Emus/SGB.pak/
 	cp ./third-party/picoarch/output/fake-08_libretro.so ./build/EXTRAS/Emus/P8.pak/
 	cp ./third-party/picoarch/output/nxengine_libretro.so "./build/EXTRAS/Roms/Native Games (SH)/Cave Story/"
-	# cp ./third-party/vvvvvv/vvvvvv "./build/EXTRAS/Roms/Native Games (SH)/VVVVVV/"
+	cp ./third-party/vvvvvv/vvvvvv "./build/EXTRAS/Roms/Native Games (SH)/VVVVVV/"
 	# cp -R ./bits/bootlogos/pak/. ./build/EXTRAS/Tools/Single-use/bootlogo.tmp
 	# cp ./third-party/logotweak/logomake/logomake ./build/EXTRAS/Tools/Single-use/bootlogo.tmp/
 	# cp ./third-party/logotweak/logowrite/logowrite ./build/EXTRAS/Tools/Single-use/bootlogo.tmp/
