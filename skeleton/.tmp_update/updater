@@ -5,6 +5,8 @@ if [ -d "/mnt/SDCARD/miyoo354" ] ; then
 	exit 0
 fi
 
+killall telnetd
+
 # or launch (and keep launched)
 LAUNCH_PATH="/mnt/SDCARD/.system/paks/MiniUI.pak/launch.sh"
 while [ -f "$LAUNCH_PATH" ] ; do
