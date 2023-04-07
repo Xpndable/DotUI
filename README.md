@@ -10,4 +10,19 @@ All support for this port on the Mini Plus will be provided on this project by X
 
 # Project Information
 
-Currently, this project is in open beta and feedback is welcomed. Any features related to WiFi capabilities of the Mini Plus will be considered once the port has had a full release.
+This project now has a release candidate, and barring any major bugs or issues found, will be graduated to v1.0 some time after publishing. The download files can be found [here](https://github.com/Xpndable/DotUI/releases)
+
+The following are the list of features that will be worked on to take advantage of the WiFi chip in the Miyoo Mini Plus (in no particular order):
+* WiFi configuration tool and OTA updates
+* File Transfer tool
+* Cloud Saves
+* Retroachievements
+* RTC Sync
+* NetPlay
+
+## Contributing
+
+If you'd like to contribute to the project:
+* For bugs, simply raise a pull request and it will be assessed on it's own merits.
+* For features, first build and release a .pak as either a Tool or Emu add-on in your own project on GitHub. If you'd then like to have this included in the project as an official extra, raise a pull request that links your code into the `third-party` folder, and include a modified `make` script. This will ensure an ever-green approach to including your work in the DotUI repository.
+* If your feature requires modification to the core components such as `keymon`, `batmon`, `main`, `common`, `mmenu` or `msettings`, feel free to discuss with me your ideas in the [Retro Gaming Handhelds discord server](https://discord.gg/retro-game-handhelds-529983248114122762), and we can co-ordinate our combined efforts.
