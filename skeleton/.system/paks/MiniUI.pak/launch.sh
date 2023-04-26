@@ -37,8 +37,8 @@ export PATH="/mnt/SDCARD/.system/bin:$PATH"
 
 # NOTE: could cause performance issues on more demanding cores...maybe?
 if [ -f /customer/lib/libpadsp.so ]; then
-    LD_PRELOAD=as_preload.so audioserver.mod &
-    export LD_PRELOAD=libpadsp.so
+	LD_PRELOAD=as_preload.so audioserver.mod &
+	export LD_PRELOAD=libpadsp.so
 fi
 
 lumon & # adjust lcd luma and saturation
@@ -61,6 +61,13 @@ if [ -f "$DATETIME_PATH" ]; then
 	DATETIME=`date +'%s'`
 	DATETIME=$((DATETIME + 6 * 60 * 60))
 	date -s "@$DATETIME"
+fi
+
+# wifi
+if [ -f /mnt/SDCARD/.system/paks/WiFi.pak/boot.sh ]; then
+	LD_PRELOAD= /mnt/SDCARD/.system/paks/WiFi.pak/boot.sh > /dev/null 2>&1 &
+else
+	killall telnetd > /dev/null 2>&1 &
 fi
 
 AUTO_PATH=$USERDATA_PATH/auto.sh
